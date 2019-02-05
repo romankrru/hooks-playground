@@ -1,28 +1,36 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import Todo from './components/Todo';
+import Header from './components/Header';
+import Auth from './components/Auth';
+import AuthContext from './authContext';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+const App = () => {
+	const [page, setPage] = useState('auth');
+	const [authStatus, setAuthSatus] = useState(false);
+
+	const switchPage = pageName => {
+		setPage(pageName);
+	};
+
+	const login = () => {
+		setAuthSatus(true);
+	};
+
+	return (
+		<AuthContext.Provider
+			value={{
+				status: authStatus,
+				login: login,
+			}}
+		>
+			<div className="App">
+				<Header onLoadTodos={() => switchPage('todos')} onLoadAuth={() => switchPage('auth')} />
+
+				{page === 'auth' && <Auth />}
+				{page === 'todos' && <Todo />}
+			</div>
+		</AuthContext.Provider>
+	);
+};
 
 export default App;
